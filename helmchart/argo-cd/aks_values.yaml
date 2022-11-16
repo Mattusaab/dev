@@ -1,0 +1,52 @@
+server:
+
+  additionalProjects:
+  - name: devops
+  - namespace: argocd
+  - additionalLabels: {}
+  - additionalAnnotations: {}
+  - additionalAnnotations: {}
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    description: this is demo DMP project
+    sourceRepo:
+    - git@github.com:Mattusaab/dev.git
+    destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+    namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+    - group: '*'
+      kind: '*'
+
+
+  additionalApplication:
+  - name: argocd-demo
+  - namespace: argocd
+  - additionalLabels: {}
+  - additionalAnnotations: {}
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    project: pumpu
+    source:
+      repoURL: git@github.com:Mattusaab/dev.git
+      taretRevision: HEAD
+      path: .
+      directory:
+        recurse: true
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: testing
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+  
+  
+  config:
+    repositories:
+      - url: git@github.com:Mattusaab/dev.git
+        sshPrivateKeySecret:
+          name: ladki
+          key: secret-value
